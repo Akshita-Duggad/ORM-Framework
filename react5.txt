@@ -1,0 +1,117 @@
+import React from 'react';
+
+const selectedStudent={
+  "id" : "",
+  "name" : "" ,
+  "company" : "",
+  "salary" : ""
+  };
+  
+  
+const App=()=>{
+  const [title,setTitle]=React.useState("Thinking Machines");
+  const [year,setYear]=React.useState("2021");
+  const [searchWhat,setSearchWhat]=React.useState("None");
+  const [studentId,setStudentId]=React.useState(0);
+const students=[
+{"id":101,"name":"Nikhil Soni","type":"Full Time","company":"GROW","package":"20 LPA","passingYear" : 2021},
+{"id":102,"name":"Yash Govindani","type":"Internship","company":"InvesTrack","package":"10000 per month","passingYear" : 2022},
+{"id":103,"name":"Akshit Shah","type":"Full Time","company":"Wiley","package":"7 LPA","passingYear" : 2021},
+{"id":104,"name":"Aditya Sharma","type":"Full Time","company":"Wiley","package":"20 LPA","passingYear" : 2021},
+{"id":105,"name":"Umang Saxena","type":"Full Time","company":"TCS","package":"7 LPA","passingYear" : 2021}
+];
+
+const applyFilter=(ev)=>{
+  if(ev.currentTarget.value.length==0)   setSearchWhat("None");
+  else setSearchWhat(ev.currentTarget.value);  
+}
+
+const filteredStudents=students.filter((student)=>{
+  if(searchWhat=="None") return true;
+ return student.company.toLowerCase().includes(searchWhat.toLowerCase());
+});
+
+const selectStudent =(ev)=>{
+  setStudentId(ev.currentTarget.getAttribute("id"));
+  var sId=ev.currentTarget.getAttribute("id");
+if(sId!=0)
+{
+  for(var i=0;i<filteredStudents.length;i++)
+  {
+    var student=filteredStudents[i];
+    if(student.id==sId)
+    {
+      selectedStudent.id=student.id;
+      selectedStudent.name=student.name;
+      selectedStudent.type=student.type;
+      selectedStudent.company=student.company;
+      selectedStudent.package=student.package;
+      selectedStudent.passingYear=student.passingYear;
+    
+
+    }
+  }
+}
+}
+
+
+
+
+return(
+  <div>
+    <Title title={title} placementYear={year} />
+    <SearchBox filterStudents={applyFilter}/>
+    <PlacementList students={filteredStudents} studentGotSelected={selectStudent}/>
+    <StudentDetail student={selectedStudent}/>
+  </div>
+)
+}
+const Title=(props)=>{
+  return(
+    <h1>{props.title} Placement {props.placementYear}</h1>
+  )
+}
+const PlacementList=(props)=>{
+  const studentSelected=(ev)=>{
+    props.studentGotSelected(ev);
+  }
+  return(
+    <ul>
+      {
+        props.students.map((student)=>{
+          return(
+            <li key={student.id} id={student.id} onClick={studentSelected}>{student.name} ({student.company})</li>
+          )
+        })
+      }
+    </ul>
+  )
+}
+
+const SearchBox=(props)=>{
+  const searchIt=(ev)=>{
+    props.filterStudents(ev);
+  }
+  return(
+    <div>
+    <label htmlFor='searchBox' >Search</label>
+
+
+    <input type='text' id='searchBox' onChange={searchIt}/>
+    </div>
+  )
+}
+const StudentDetail=(props)=>{
+  return(
+    <div>
+            Id : {props.student.id}<br></br>
+            Name : {props.student.name}<br></br>
+            Type : {props.student.type}<br></br>
+            Company : {props.student.company}<br></br>
+            Package : {props.student.package}<br></br>
+            Passing Year : {props.student.passingYear}<br></br>
+
+    </div>
+  )
+}
+export default App;
